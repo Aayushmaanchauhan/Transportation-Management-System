@@ -1,0 +1,116 @@
+:root{
+  --bg:#0f172a; --panel:#0b1224; --card:#0f1b37; --border:#1f2a44; --text:#e2e8f0; --muted:#94a3b8;
+  --brand:#60a5fa; --brand2:#22d3ee; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+  --radius:16px; --rsm:12px; --shadow:0 8px 30px rgba(2,8,23,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Ubuntu,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1000px 600px at 10% -10%, rgba(96,165,250,.08), transparent),
+    radial-gradient(800px 500px at 110% 10%, rgba(34,211,238,.08), transparent),
+    var(--bg);
+}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 16px}
+header.sticky{position:sticky;top:0;z-index:40;background:rgba(11,18,36,.7);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}
+.chip{padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:linear-gradient(180deg,#0d1b34,#091226)}
+.btn{appearance:none;border:1px solid var(--border);background:linear-gradient(180deg,#1b2a4d,#15203b);color:var(--text);
+  padding:10px 14px;border-radius:12px;cursor:pointer;box-shadow:var(--shadow)}
+.btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand2));color:#001428;font-weight:700}
+.btn.ghost{background:transparent}
+.btn.small{padding:8px 10px}
+.grid{display:grid;gap:16px}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.0));border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow)}
+.panel.pad{padding:18px}
+.h1{font-size:clamp(26px,3.4vw,40px);margin:12px 0 0}
+.h2{font-size:clamp(20px,2.2vw,28px);margin:0 0 10px}
+.muted{color:var(--muted)}
+.footer{margin:28px 0 40px;color:var(--muted);text-align:center}
+/* Layouts */
+.main-grid{grid-template-columns:1fr}
+@media (min-width: 960px){.main-grid{grid-template-columns:1fr 1fr}}
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(4,1fr)}
+@media (max-width: 900px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);padding:14px;border-radius:var(--rsm)}
+.kpi .value{font-size:20px;font-weight:800}
+.features{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+@media (max-width: 900px){.features{grid-template-columns:1fr}}
+.table{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:14px}
+.table th{color:var(--muted);font-weight:600;text-align:left;padding:8px}
+.table td{padding:12px;background:linear-gradient(180deg,#0d1a33,#0b1429);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.table tr td:first-child{border-left:1px solid var(--border);border-top-left-radius:10px;border-bottom-left-radius:10px}
+.table tr td:last-child{border-right:1px solid var(--border);border-top-right-radius:10px;border-bottom-right-radius:10px}
+input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#081126;color:var(--text)}
+label{font-size:12px;color:var(--muted)}
+.row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.row4{display:grid;gap:10px;grid-template-columns:repeat(4,1fr)}
+@media (max-width: 900px){.row,.row4{grid-template-columns:1fr}}
+.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#0b2547;border:1px solid var(--border);font-size:12px;margin-right:6px}
+.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+/* Sidebar for dashboard pages */
+.shell{display:grid;grid-template-columns:260px 1fr;gap:16px;margin-top:16px}
+@media (max-width: 900px){.shell{grid-template-columns:1fr}}
+.sidebar{position:sticky;top:70px;height:calc(100dvh - 100px);overflow:auto;padding-bottom:10px}
+.side-link{display:block;padding:10px 12px;margin:6px 0;border:1px solid var(--border);border-radius:12px;background:linear-gradient(180deg,#0e1a33,#0b1429)}
+.side-link.active{outline:2px solid rgba(96,165,250,.5)}
+/* Auth boxes */
+.auth-box{max-width:480px;margin:40px auto}
+.auth-actions{display:flex;justify-content:space-between;align-items:center;gap:10px}
+/* --- Bright Bus Background --- */
+body {
+  background:
+    url('bus-bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  background-color: #ffffff; /* white fallback */
+  color: #000; /* make text visible if you prefer dark text */
+}
+/* --- Global white text for better visibility on dark backgrounds --- */
+body,
+h1, h2, h3, h4, h5, h6,
+p, label, span, a,
+td, th, div, button {
+  color: #ffffff !important;
+}
+
+/* Sidebar, Navbar, Cards, Panels, etc. */
+.sidebar,
+.nav,
+.panel,
+.kpi,
+.side-link,
+.btn,
+.chip {
+  color: #ffffff !important;
+}
+
+/* For muted or secondary text (make slightly lighter white) */
+.muted {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Inputs and selects - keep readable dark text on light inputs */
+input, select, textarea {
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+/* Buttons - ensure contrast */
+.btn.primary {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  color: #fff !important;
+}
+
+/* Keep hover states visible */
+.btn:hover,
+.side-link:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+  transition: all 0.2s ease;
+}

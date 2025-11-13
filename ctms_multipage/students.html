@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>CTMS • Students</title>
+<link rel="stylesheet" href="assets/styles.css" /></head>
+<body>
+  <main class="container">
+    <div id="headerMount"></div>
+    <section class="shell">
+      <aside class="sidebar panel pad" id="sidebar"></aside>
+      <div class="grid">
+        <div class="panel pad">
+          <h1 class="h1">Students</h1>
+          <div class="row"><input id="search" placeholder="Search students..." /><div></div></div>
+          <table class="table" id="studentTable"></table>
+        </div>
+        <div class="panel pad">
+          <h2 class="h2">Add Student</h2>
+          <form id="studentForm" class="grid">
+            <div class="row4">
+              <div><label>Roll No.</label><input name="roll" required placeholder="CSE21-001"></div>
+              <div><label>Name</label><input name="name" required></div>
+              <div><label>Route</label><select name="routeId" id="studentRoute"></select></div>
+              <div><label>Stop</label><input name="stop" required placeholder="Mall Rd"></div>
+            </div>
+            <div class="row"><div><label>Fee Due (₹)</label><input name="feeDue" type="number" min="0" value="0"></div><div><label>Notes</label><input name="notes"></div></div>
+            <button class="btn primary">Save Student</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script type="module">
+    import { injectHeader, guard, buildSidebar } from './js/ui.js';
+    import { db } from './js/storage.js';
+    import { renderStudents, renderRoutes } from './js/render.js';
+    guard(); injectHeader(); buildSidebar('Students');
+    function redraw(){ renderStudents((document.getElementById('search').value||'').toLowerCase()); }
+    document.getElementById('search').addEventListener('input', redraw);
+    document.getElementById('studentForm').addEventListener('submit', e=>{
+      e.preventDefault(); const f = new FormData(e.target);
+      db.state.students.push({ roll:f.get('roll'), name:f.get('name'), routeId:f.get('routeId'), stop:f.get('stop'), feeDue:Number(f.get('feeDue')||0)});
+      db.save(); e.target.reset(); redraw();
+    });
+    document.getElementById('studentTable').addEventListener('click', e=>{
+      const pay = e.target.getAttribute('data-pay'); const del = e.target.getAttribute('data-del');
+      if(pay){ const s = db.state.students.find(x=>x.roll===pay); if(s){ s.feeDue = 0; db.save(); redraw(); } }
+      if(del){ db.state.students = db.state.students.filter(s=>s.roll!==del); db.save(); redraw(); }
+    });
+    // ensure route select has routes
+    function ensureRoutes(){ renderRoutes(); }
+    ensureRoutes(); redraw();
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>CTMS • Reports</title>
+<link rel="stylesheet" href="assets/styles.css" /></head>
+<body>
+  <main class="container">
+    <div id="headerMount"></div>
+    <section class="shell">
+      <aside class="sidebar panel pad" id="sidebar"></aside>
+      <div class="grid">
+        <div class="panel pad">
+          <h1 class="h1">Reports & Export</h1>
+          <p class="muted">Download current dataset as JSON.</p>
+          <button class="btn" id="exportBtn2">Export JSON</button>
+        </div>
+        <div class="panel pad">
+          <h2 class="h2">Summary</h2>
+          <ul id="summary" class="muted"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script type="module">
+    import { injectHeader, guard, buildSidebar } from './js/ui.js';
+    import { db } from './js/storage.js';
+    guard(); injectHeader(); buildSidebar('Reports & Exports');
+    document.getElementById('exportBtn2').addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify(db.state,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='ctms-data.json'; a.click(); URL.revokeObjectURL(url);
+    });
+    const s = document.getElementById('summary');
+    s.innerHTML = `
+      <li>Vehicles: <strong>${db.state.vehicles.length}</strong></li>
+      <li>Drivers: <strong>${db.state.drivers.length}</strong></li>
+      <li>Routes: <strong>${db.state.routes.length}</strong></li>
+      <li>Students: <strong>${db.state.students.length}</strong></li>
+      <li>Alerts: <strong>${db.state.alerts.length}</strong></li>`;
+  </script>
+</body>
+</html>

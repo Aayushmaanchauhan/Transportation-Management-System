@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>CTMS • Routes</title>
+<link rel="stylesheet" href="assets/styles.css" /></head>
+<body>
+  <main class="container">
+    <div id="headerMount"></div>
+    <section class="shell">
+      <aside class="sidebar panel pad" id="sidebar"></aside>
+      <div class="grid">
+        <div class="panel pad">
+          <h1 class="h1">Routes</h1>
+          <div class="row"><input id="search" placeholder="Search routes..." /><div></div></div>
+          <table class="table" id="routeTable"></table>
+        </div>
+        <div class="panel pad">
+          <h2 class="h2">Add Route</h2>
+          <form id="routeForm" class="grid">
+            <div class="row4">
+              <div><label>ID</label><input name="routeId" required placeholder="R-01"></div>
+              <div><label>Vehicle</label><select name="vehicleId" id="routeVehicle"></select></div>
+              <div><label>Driver</label><select name="driverId" id="routeDriver"></select></div>
+              <div><label>Time</label><input name="time" required placeholder="07:10 → 08:05"></div>
+            </div>
+            <div class="row">
+              <div><label>Start</label><input name="start" required placeholder="City Center"></div>
+              <div><label>End</label><input name="end" required placeholder="Campus Main Gate"></div>
+            </div>
+            <div><label>Stops (comma-separated)</label><textarea name="stops" rows="2" placeholder="Circle A, Mall Rd, Sector 5"></textarea></div>
+            <button class="btn primary">Save Route</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script type="module">
+    import { injectHeader, guard, buildSidebar } from './js/ui.js';
+    import { db } from './js/storage.js';
+    import { renderRoutes } from './js/render.js';
+    guard(); injectHeader(); buildSidebar('Routes');
+    function redraw(){ renderRoutes((document.getElementById('search').value||'').toLowerCase()); }
+    document.getElementById('search').addEventListener('input', redraw);
+    document.getElementById('routeForm').addEventListener('submit', e=>{
+      e.preventDefault(); const f = new FormData(e.target);
+      const stops = String(f.get('stops')||'').split(',').map(s=>s.trim()).filter(Boolean);
+      db.state.routes.push({ routeId:f.get('routeId'), vehicleId:f.get('vehicleId'), driverId:f.get('driverId'),
+        start:f.get('start'), end:f.get('end'), stops, time:f.get('time') });
+      db.save(); e.target.reset(); redraw();
+    });
+    document.getElementById('routeTable').addEventListener('click', e=>{
+      const id = e.target.getAttribute('data-del'); if(!id) return; db.state.routes = db.state.routes.filter(r=>r.routeId!==id); db.save(); redraw();
+    });
+    redraw();
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>CTMS • Alerts</title>
+<link rel="stylesheet" href="assets/styles.css" /></head>
+<body>
+  <main class="container">
+    <div id="headerMount"></div>
+    <section class="shell">
+      <aside class="sidebar panel pad" id="sidebar"></aside>
+      <div class="grid">
+        <div class="panel pad">
+          <h1 class="h1">Alerts</h1>
+          <div id="alertList" class="grid" style="grid-template-columns:1fr"></div>
+        </div>
+        <div class="panel pad">
+          <h2 class="h2">New Alert</h2>
+          <form id="alertForm" class="grid">
+            <div><label>Message</label><textarea name="text" rows="2" required placeholder="Route R-01 delayed by 10 minutes due to traffic."></textarea></div>
+            <label><input type="checkbox" name="critical"> Critical</label>
+            <button class="btn primary">Send</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script type="module">
+    import { injectHeader, guard, buildSidebar } from './js/ui.js';
+    import { db } from './js/storage.js';
+    guard(); injectHeader(); buildSidebar('Alerts');
+    function render(){
+      const list = document.getElementById('alertList');
+      list.innerHTML = db.state.alerts.sort((a,b)=>b.ts-a.ts).map(a=>`
+        <div class="panel pad">
+          <div><span class="${a.critical?'bad':'ok'}">${a.critical?'CRITICAL':'INFO'}</span> — ${a.text}</div>
+          <div class="muted">${new Date(a.ts).toLocaleString()}</div>
+          <div style="margin-top:8px"><button class="btn small ghost" data-del="${a.id}">Dismiss</button></div>
+        </div>`).join('');
+    }
+    document.getElementById('alertForm').addEventListener('submit', e=>{
+      e.preventDefault(); const f = new FormData(e.target);
+      db.state.alerts.unshift({ id: Date.now(), text: f.get('text'), critical: !!f.get('critical'), ts: Date.now() });
+      db.save(); e.target.reset(); render();
+    });
+    document.getElementById('alertList').addEventListener('click', e=>{
+      const id = Number(e.target.getAttribute('data-del')); if(!id) return; db.state.alerts = db.state.alerts.filter(a=>a.id!==id); db.save(); render();
+    });
+    render();
+  </script>
+</body>
+</html>

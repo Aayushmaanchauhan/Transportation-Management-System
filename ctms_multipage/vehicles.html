@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>CTMS • Vehicles</title>
+<link rel="stylesheet" href="assets/styles.css" /></head>
+<body>
+  <main class="container">
+    <div id="headerMount"></div>
+    <section class="shell">
+      <aside class="sidebar panel pad" id="sidebar"></aside>
+      <div class="grid">
+        <div class="panel pad">
+          <h1 class="h1">Vehicles</h1>
+          <div class="row">
+            <input id="search" placeholder="Search vehicles..." />
+            <div></div>
+          </div>
+          <table class="table" id="vehicleTable"></table>
+        </div>
+        <div class="panel pad">
+          <h2 class="h2">Add Vehicle</h2>
+          <form id="vehicleForm" class="grid">
+            <div class="row4">
+              <div><label>ID</label><input name="id" required placeholder="GJ-09-AB-1122"></div>
+              <div><label>Type</label><select name="type"><option>Bus</option><option>Mini Bus</option><option>Van</option></select></div>
+              <div><label>Capacity</label><input name="capacity" type="number" min="1" required></div>
+              <div><label>Status</label><select name="status"><option>Active</option><option>Maintenance</option><option>Inactive</option></select></div>
+            </div>
+            <div class="row"><div><label>Last Service</label><input name="lastService" type="date" required></div><div><label>Notes</label><input name="notes"></div></div>
+            <button class="btn primary">Save Vehicle</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script type="module">
+    import { injectHeader, guard, buildSidebar } from './js/ui.js';
+    import { db } from './js/storage.js';
+    import { renderVehicles } from './js/render.js';
+    guard(); injectHeader(); buildSidebar('Vehicles');
+    function redraw(){ renderVehicles((document.getElementById('search').value||'').toLowerCase()); }
+    document.getElementById('search').addEventListener('input', redraw);
+    document.getElementById('vehicleForm').addEventListener('submit', e=>{
+      e.preventDefault(); const f = new FormData(e.target);
+      db.state.vehicles.push({ id:f.get('id'), type:f.get('type'), capacity:Number(f.get('capacity')), status:f.get('status'),
+        lastService:f.get('lastService'), notes:f.get('notes') }); db.save(); e.target.reset(); redraw();
+    });
+    document.getElementById('vehicleTable').addEventListener('click', e=>{
+      const id = e.target.getAttribute('data-del'); if(!id) return; db.state.vehicles = db.state.vehicles.filter(v=>v.id!==id); db.save(); redraw();
+    });
+    redraw();
+  </script>
+</body>
+</html>

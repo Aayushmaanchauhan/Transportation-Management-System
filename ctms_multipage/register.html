@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTMS • Register</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <header class="sticky">
+    <div class="container nav">
+      <div class="brand"><span class="chip">🚌</span><span>College Transport</span></div>
+      <div class="flex"><a class="chip" href="index.html">Login</a></div>
+    </div>
+  </header>
+  <main class="container">
+    <div class="panel pad auth-box">
+      <h1 class="h1">Create account</h1>
+      <p class="muted">Register to access CTMS.</p>
+      <form id="regForm" class="grid">
+        <div class="row">
+          <div><label>Name</label><input name="name" required placeholder="Your Name" /></div>
+          <div><label>Email</label><input name="email" type="email" required placeholder="you@college.edu" /></div>
+        </div>
+        <div class="row">
+          <div><label>Password</label><input name="password" type="password" required /></div>
+          <div><label>Confirm Password</label><input name="confirm" type="password" required /></div>
+        </div>
+        <div class="auth-actions">
+          <button class="btn primary">Register</button>
+          <a class="chip" href="index.html">I already have an account</a>
+        </div>
+      </form>
+    </div>
+  </main>
+  <script type="module">
+    import { register } from './js/auth.js';
+    document.getElementById('regForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const f = new FormData(e.target);
+      if(f.get('password') !== f.get('confirm')){ alert('Passwords do not match'); return; }
+      try{
+        register({name:f.get('name'), email:f.get('email'), password:f.get('password')});
+        location.href = 'dashboard.html';
+      }catch(err){ alert(err.message); }
+    });
+  </script>
+</body>
+</html>

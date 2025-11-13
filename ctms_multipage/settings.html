@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>CTMS • Settings</title>
+<link rel="stylesheet" href="assets/styles.css" /></head>
+<body>
+  <main class="container">
+    <div id="headerMount"></div>
+    <section class="shell">
+      <aside class="sidebar panel pad" id="sidebar"></aside>
+      <div class="grid">
+        <div class="panel pad">
+          <h1 class="h1">Settings</h1>
+          <button id="resetBtn" class="btn bad">Reset Demo Data</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script type="module">
+    import { injectHeader, guard, buildSidebar } from './js/ui.js';
+    import { db } from './js/storage.js';
+    guard(); injectHeader(); buildSidebar('Settings');
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      if(confirm('Reset demo data?')){ db.reset(); alert('Data reset.'); }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTMS • Feedback & FAQ</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>
+    /* --- Feedback + FAQ Page Extras --- */
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; justify-content: center; }
+    .tabs a { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--border); }
+    .tabs a.active { outline: 2px solid rgba(96,165,250,.5); }
+    .faq details { border: 1px solid var(--border); border-radius: 12px; background: rgba(255,255,255,0.05); margin: 10px 0; }
+    .faq summary { cursor: pointer; padding: 14px 16px; font-weight: 700; list-style: none; color: #fff; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq details[open] summary { outline: 2px solid rgba(96,165,250,.4); border-radius: 12px; }
+    .faq .faq-body { padding: 0 16px 16px 16px; color: #f9fafb; }
+    .two { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 980px) { .two { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="sticky">
+    <div class="container nav">
+      <div class="brand"><span class="chip">🚌</span><span>College Transport</span></div>
+      <nav class="flex" style="gap:8px">
+        <a class="chip" href="dashboard.html">Dashboard</a>
+        <a class="chip" href="feedback-faq.html" style="background:linear-gradient(90deg,#2563eb,#3b82f6);color:#fff;">Feedback & FAQ</a>
+        <a class="chip" href="index.html">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container wrap">
+    <div class="tabs">
+      <a href="#feedback" id="t1" class="chip active">Feedback</a>
+      <a href="#faq" id="t2" class="chip">FAQ</a>
+    </div>
+
+    <div class="two">
+      <!-- FEEDBACK SECTION -->
+      <section id="feedback" class="panel pad">
+        <h1 class="h1">Feedback</h1>
+        <p class="muted">Share your thoughts or report any issues below.</p>
+
+        <form id="feedbackForm" class="grid">
+          <div class="row">
+            <div>
+              <label>Your name</label>
+              <input name="name" type="text" placeholder="Optional" />
+            </div>
+            <div>
+              <label>Email</label>
+              <input name="email" type="email" placeholder="you@college.edu (optional)" />
+            </div>
+          </div>
+
+          <div>
+            <label>Category</label>
+            <select name="category" required>
+              <option value="Suggestion">Suggestion</option>
+              <option value="Bug">Bug</option>
+              <option value="Driver/Route">Driver/Route</option>
+              <option value="Payment">Payment</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Message</label>
+            <textarea name="message" rows="6" required placeholder="Write your feedback here…"></textarea>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>Rating</label>
+              <select name="rating">
+                <option value="">—</option>
+                <option>1 ★</option>
+                <option>2 ★★</option>
+                <option>3 ★★★</option>
+                <option>4 ★★★★</option>
+                <option>5 ★★★★★</option>
+              </select>
+            </div>
+            <div>
+              <label>Allow follow-up?</label>
+              <select name="consent">
+                <option value="yes">Yes, contact me</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="auth-actions">
+            <button class="btn primary" type="submit">Submit Feedback</button>
+            <button class="btn ghost" id="exportBtn" type="button">Export JSON</button>
+            <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+          </div>
+        </form>
+
+        <p class="muted" id="statusMsg" style="margin-top:6px"></p>
+
+        <hr style="opacity:.2;border:none;border-top:1px solid var(--border);margin:18px 0">
+
+        <h2 class="h2">Recent Feedback</h2>
+        <div id="feedbackList" class="grid"></div>
+      </section>
+
+      <!-- FAQ SECTION -->
+      <section id="faq" class="panel pad faq">
+        <h1 class="h1">Frequently Asked Questions</h1>
+        <p class="muted">Quick answers to common questions.</p>
+
+        <details>
+          <summary>How do I register for the transport service?</summary>
+          <div class="faq-body">
+            Go to <b>Register</b>, fill your details, select your route and stop, then submit. You’ll see a confirmation on your dashboard.
+          </div>
+        </details>
+
+        <details>
+          <summary>How can I pay my transport fee?</summary>
+          <div class="faq-body">
+            Open the <b>Fees</b> page and choose a payment method. Your receipt is saved locally in your browser.
+          </div>
+        </details>
+
+        <details>
+          <summary>Can I change my pickup/drop stop?</summary>
+          <div class="faq-body">
+            Yes. Go to <b>Routes → Manage</b>, choose a new stop, and save. The change reflects the next day.
+          </div>
+        </details>
+
+        <details>
+          <summary>What if my bus is running late?</summary>
+          <div class="faq-body">
+            Check the <b>Alerts</b> page for updates. If there’s no alert, contact your route manager from the <b>Drivers</b> page.
+          </div>
+        </details>
+
+        <details>
+          <summary>Where is my data stored?</summary>
+          <div class="faq-body">
+            This demo project stores data only in your browser’s <b>localStorage</b>. No external server is used.
+          </div>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="js/feedback-faq.js"></script>
+</body>
+</html>

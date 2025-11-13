@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>CTMS • Drivers</title>
+<link rel="stylesheet" href="assets/styles.css" /></head>
+<body>
+  <main class="container">
+    <div id="headerMount"></div>
+    <section class="shell">
+      <aside class="sidebar panel pad" id="sidebar"></aside>
+      <div class="grid">
+        <div class="panel pad">
+          <h1 class="h1">Drivers</h1>
+          <div class="row"><input id="search" placeholder="Search drivers..." /><div></div></div>
+          <table class="table" id="driverTable"></table>
+        </div>
+        <div class="panel pad">
+          <h2 class="h2">Add Driver</h2>
+          <form id="driverForm" class="grid">
+            <div class="row4">
+              <div><label>ID</label><input name="id" required placeholder="DRV-001"></div>
+              <div><label>Name</label><input name="name" required></div>
+              <div><label>Phone</label><input name="phone" required placeholder="+91-98765-12345"></div>
+              <div><label>Status</label><select name="status"><option>On Duty</option><option>Standby</option><option>Leave</option></select></div>
+            </div>
+            <div class="row"><div><label>License</label><input name="license" required></div><div><label>Rating</label><input name="rating" type="number" step="0.1" min="0" max="5" value="4.8"></div></div>
+            <button class="btn primary">Save Driver</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script type="module">
+    import { injectHeader, guard, buildSidebar } from './js/ui.js';
+    import { db } from './js/storage.js';
+    import { renderDrivers } from './js/render.js';
+    guard(); injectHeader(); buildSidebar('Drivers');
+    function redraw(){ renderDrivers((document.getElementById('search').value||'').toLowerCase()); }
+    document.getElementById('search').addEventListener('input', redraw);
+    document.getElementById('driverForm').addEventListener('submit', e=>{
+      e.preventDefault(); const f = new FormData(e.target);
+      db.state.drivers.push({ id:f.get('id'), name:f.get('name'), phone:f.get('phone'), license:f.get('license'),
+        rating:Number(f.get('rating')||0), status:f.get('status') }); db.save(); e.target.reset(); redraw();
+    });
+    document.getElementById('driverTable').addEventListener('click', e=>{
+      const id = e.target.getAttribute('data-del'); if(!id) return; db.state.drivers = db.state.drivers.filter(d=>d.id!==id); db.save(); redraw();
+    });
+    redraw();
+  </script>
+</body>
+</html>

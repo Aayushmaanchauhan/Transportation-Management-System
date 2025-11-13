@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTMS • Dashboard</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div id="headerMount"></div>
+    <section class="shell">
+      <aside class="sidebar panel pad" id="sidebar"></aside>
+      <div class="grid">
+        <div class="panel pad">
+          <h1 class="h1">Dashboard</h1>
+          <p class="muted">Quick stats and shortcuts.</p>
+          <div class="kpis">
+            <div class="kpi"><div class="value" id="kpiBuses">0</div><div class="muted">Active Buses</div></div>
+            <div class="kpi"><div class="value" id="kpiOntime">0%</div><div class="muted">On‑time</div></div>
+            <div class="kpi"><div class="value" id="kpiIncidents">0</div><div class="muted">Incidents</div></div>
+            <div class="kpi"><div class="value" id="kpiRating">0★</div><div class="muted">Avg Driver Rating</div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h2 class="h2">Shortcuts</h2>
+          <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+            <a class="side-link" href="vehicles.html">➜ Manage Vehicles</a>
+            <a class="side-link" href="drivers.html">➜ Manage Drivers</a>
+            <a class="side-link" href="routes.html">➜ Plan Routes</a>
+            <a class="side-link" href="students.html">➜ Students</a>
+            <a class="side-link" href="fees.html">➜ Fee Payments</a>
+            <a class="side-link" href="alerts.html">➜ Alerts</a>
+            <a class="side-link" href="./feedback-faq.html">Feedback & FAQ</a>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="footer">© 2025 CTMS</div>
+  </main>
+  <script type="module">
+    import { injectHeader, guard, buildSidebar } from './js/ui.js';
+    import { db } from './js/storage.js';
+    guard(); injectHeader(); buildSidebar('Overview');
+    // KPIs
+    const buses = db.state.vehicles.filter(v=>v.status==='Active').length;
+    const rating = (db.state.drivers.reduce((n,d)=>n+d.rating,0)/(db.state.drivers.length||1)).toFixed(1);
+    document.getElementById('kpiBuses').textContent = buses;
+    document.getElementById('kpiRating').textContent = `${rating}★`;
+    document.getElementById('kpiIncidents').textContent = db.state.alerts.filter(a=>a.critical).length;
+    document.getElementById('kpiOntime').textContent = (92 + Math.floor(Math.random()*6)) + '%';
+  </script>
+</body>
+</html>

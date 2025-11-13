@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>CTMS • Fees</title>
+<link rel="stylesheet" href="assets/styles.css" /></head>
+<body>
+  <main class="container">
+    <div id="headerMount"></div>
+    <section class="shell">
+      <aside class="sidebar panel pad" id="sidebar"></aside>
+      <div class="grid">
+        <div class="panel pad">
+          <h1 class="h1">Fee Payment</h1>
+          <div class="kpis">
+            <div class="kpi"><div class="value" id="feeCollected">₹0</div><div class="muted">Collected</div></div>
+            <div class="kpi"><div class="value" id="feeDue">₹0</div><div class="muted">Outstanding</div></div>
+            <div class="kpi"><div class="value" id="feeRoutes">0</div><div class="muted">Routes</div></div>
+            <div class="kpi"><div class="value" id="feeStudents">0</div><div class="muted">Students</div></div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn small" id="markAllPaid">Mark All Paid</button>
+            <button class="btn small ghost" id="resetFees">Reset Fees</button>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h2 class="h2">Students & Fees</h2>
+          <div class="row"><input id="search" placeholder="Search students..." /><div></div></div>
+          <table class="table" id="studentTable"></table>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script type="module">
+    import { injectHeader, guard, buildSidebar } from './js/ui.js';
+    import { db } from './js/storage.js';
+    import { renderStudents, renderFeesSummary } from './js/render.js';
+    guard(); injectHeader(); buildSidebar('Fee Payment');
+    function redraw(){ renderStudents((document.getElementById('search').value||'').toLowerCase()); renderFeesSummary(); }
+    document.getElementById('search').addEventListener('input', redraw);
+    document.getElementById('studentTable').addEventListener('click', e=>{
+      const pay = e.target.getAttribute('data-pay'); const del = e.target.getAttribute('data-del');
+      if(pay){ const s = db.state.students.find(x=>x.roll===pay); if(s){ s.feeDue = 0; db.save(); redraw(); } }
+      if(del){ db.state.students = db.state.students.filter(s=>s.roll!==del); db.save(); redraw(); }
+    });
+    document.getElementById('markAllPaid').addEventListener('click', ()=>{ db.state.students.forEach(s=>s.feeDue=0); db.save(); redraw(); });
+    document.getElementById('resetFees').addEventListener('click', ()=>{ db.state.students.forEach(s=> s.feeDue = s.feeDue || 1200 ); db.save(); redraw(); });
+    redraw();
+  </script>
+</body>
+</html>
